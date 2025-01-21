@@ -2,3 +2,5 @@ ven
 .idea/
 .env
 __pycache__/
+mydb.sql
+.env.docker
