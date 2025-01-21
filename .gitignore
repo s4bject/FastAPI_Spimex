@@ -1,6 +1,4 @@
-ven
-.idea/
 .env
-__pycache__/
-mydb.sql
 .env.docker
+__pycache__/
+.idea/
