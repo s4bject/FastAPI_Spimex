@@ -1,5 +1,7 @@
+from typing import Dict, Any
+
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, datetime
 
 
 class TradingResultsResponse(BaseModel):
@@ -19,3 +21,4 @@ class TradingResultsResponse(BaseModel):
 
     class Config:
         orm_mode = True
+        from_attributes = True
