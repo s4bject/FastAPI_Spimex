@@ -7,7 +7,7 @@ redis_client = None
 async def init_redis():
     global redis_client
     try:
-        redis_client = await asyncio_redis.from_url("redis://localhost:6379", decode_responses=True)  # redis://localhost:6379 если сервер не в контейнере
+        redis_client = await asyncio_redis.from_url("redis://redis:6379", decode_responses=True)  # redis://localhost:6379 если сервер не в контейнере
         print("Redis успешно инициализирован.")
     except Exception as e:
         print(f"Ошибка инициализации Redis: {e}")
