@@ -20,14 +20,6 @@ def mock_async_session():
     session.execute.return_value = MagicMock(scalars=MagicMock(return_value=MagicMock(all=MagicMock())))
     return session
 
-
-@pytest.fixture
-def mock_redis():
-    with patch("database.redis_client.redis_client") as mock:
-        mock.get.return_value = None
-        yield mock
-
-
 @pytest.fixture
 def client(mock_async_session):
     app.dependency_overrides[get_db] = lambda: mock_async_session
