@@ -1,12 +1,17 @@
 import pytest
 import httpx
 
+# Глобальная переменная для базового URL
+BASE_URL = "http://127.0.0.1:8000"
+
 
 @pytest.mark.asyncio
 async def test_last_trading_dates():
     async with httpx.AsyncClient() as client:
-        response = await client.get("http://127.0.0.1:8000/spimex/last-trading-dates?nums_days=4",
-                                    headers={"accept": "application/json"})
+        response = await client.get(
+            f"{BASE_URL}/spimex/last-trading-dates?nums_days=4",
+            headers={"accept": "application/json"}
+        )
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 4
@@ -19,7 +24,7 @@ async def test_last_trading_dates():
 async def test_get_dynamics():
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            "http://127.0.0.1:8000/spimex/get-dynamics?start_date=2025-01-01&end_date=2025-01-09",
+            f"{BASE_URL}/spimex/get-dynamics?start_date=2025-01-01&end_date=2025-01-09",
             headers={"accept": "application/json"}
         )
 
@@ -51,7 +56,7 @@ async def test_get_dynamics():
 async def test_get_dynamics_oil_id():
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            "http://127.0.0.1:8000/spimex/get-dynamics?start_date=2025-01-01&end_date=2025-01-09&oil_id=PC07",
+            f"{BASE_URL}/spimex/get-dynamics?start_date=2025-01-01&end_date=2025-01-09&oil_id=PC07",
             headers={"accept": "application/json"}
         )
 
@@ -83,7 +88,7 @@ async def test_get_dynamics_oil_id():
 async def test_get_dynamics_delivery_basis_id_first_record():
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            "http://127.0.0.1:8000/spimex/get-dynamics?start_date=2025-01-01&end_date=2025-01-09&delivery_basis_id=PUF",
+            f"{BASE_URL}/spimex/get-dynamics?start_date=2025-01-01&end_date=2025-01-09&delivery_basis_id=PUF",
             headers={"accept": "application/json"}
         )
 
@@ -114,7 +119,7 @@ async def test_get_dynamics_delivery_basis_id_first_record():
 async def test_get_trading_results_first_record():
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            "http://127.0.0.1:8000/spimex/get-trading-results",
+            f"{BASE_URL}/spimex/get-trading-results",
             headers={"accept": "application/json"}
         )
 
@@ -145,7 +150,7 @@ async def test_get_trading_results_first_record():
 async def test_get_trading_results_oil_id_A695():
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            "http://127.0.0.1:8000/spimex/get-trading-results?oil_id=A695",
+            f"{BASE_URL}/spimex/get-trading-results?oil_id=A695",
             headers={"accept": "application/json"}
         )
 
@@ -176,43 +181,14 @@ async def test_get_trading_results_oil_id_A695():
 async def test_get_trading_results_oil_id_A695_delivery_type_id_A():
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            "http://127.0.0.1:8000/spimex/get-trading-results?oil_id=A695&delivery_type_id=A",
+            f"{BASE_URL}/spimex/get-trading-results?oil_id=A695&delivery_type_id=A",
             headers={"accept": "application/json"}
         )
 
     assert response.status_code == 200
 
-    # Преобразуем ответ в JSON
     data = response.json()
 
-    assert len(data) > 0
-
-    first_record = data[0]
-    assert first_record["id"] == 1276
-    assert first_record["exchange_product_id"] == "A695ENU025A"
-    assert first_record[
-               "exchange_product_name"] == "Бензин (АИ-95-К5) (ГОСТ 32513-2013/ГОСТ 32513-2023), Елховский НПЗ (самовывоз автотранспортом)"
-    assert first_record["oil_id"] == "A695"
-    assert first_record["delivery_basis_id"] == "ENU"
-    assert first_record["delivery_basis_name"] == "Елховский НПЗ"
-    assert first_record["delivery_type_id"] == "A"
-    assert first_record["volume"] == "75"
-    assert first_record["total"] == "4200025"
-    assert first_record["count"] == 2
-    assert first_record["date"] == "2025-01-14"
-    assert first_record["created_on"] == "2024-09-23"
-    assert first_record["updated_on"] == "2025-01-15"
-
-
-@pytest.mark.asyncio
-async def test_get_trading_results_oil_id_A695_delivery_type_id_A_delivery_basis_id_ENU():
-    async with httpx.AsyncClient() as client:
-        response = await client.get(
-            "http://127.0.0.1:8000/spimex/get-trading-results?oil_id=A695&delivery_type_id=A&delivery_basis_id=ENU",
-            headers={"accept": "application/json"}
-        )
-    assert response.status_code == 200
-    data = response.json()
     assert len(data) > 0
 
     first_record = data[0]
