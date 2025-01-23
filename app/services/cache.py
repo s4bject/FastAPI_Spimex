@@ -34,12 +34,14 @@ def cache_response():
 
             logger.info(f"Кэш для ключа {cache_key} не найден. Выполняем запрос.")
             response = await func(*args, **kwargs)
-            if isinstance(response, (list, dict)):
-                response_json = json.dumps(response, ensure_ascii=False, default=date_handler)
-            elif hasattr(response, "json"):
-                response_json = response.json()
-            else:
-                response_json = str(response)
+            if isinstance(response, list) or isinstance(response, dict):
+                response_json = json.dumps(
+                    [
+                        item.dict() if hasattr(item, 'dict') else item
+                        for item in response
+                    ],
+                    ensure_ascii=False, default=date_handler
+                )
                 await redis.set(cache_key, response_json)
                 logger.info(f"Данные успешно сохранены в кэш для ключа: {cache_key}")
             return response
